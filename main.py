@@ -1,45 +1,23 @@
-import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
-from settings import *
-file = open("file.txt", "r")
-listmain = np.loadtxt("file.txt", delimiter='\t', dtype=np.float)
-num = len(listmain) // 10
-print('Правила ввода данных в файл:\n Первые 10 строчек - ось x, следующие 10 - ось y.\n Далее по аналогии. Можно ввести от 1-го до 3-х графиков')
-print('Найдено ', num, ' наборов данных, выберите сколько отобразить:\n 1-3: отобразить один из графиков\n 4: отобразить все графики')
-choice = int(input())
-list12 = []
-list13 = []
-list22 = []
-list23 = []
-if choice == 1:
-    list1 = listmain[:20]
-    list2 = list1[10:20]
-    list1 = list1[:10]
-    print(list1)
-    print(list2)
-elif choice == 2:
-    list1 = listmain[20:40]
-    list2 = list1[10:20]
-    list1 = list1[:10]
-    print(list1)
-    print(list2)
-elif choice == 3:
-    list1 = listmain[40:360]
-    list2 = list1[10:20]
-    list1 = list1[:10]
-    print(list1)
-    print(list2)
-elif choice == 4:
-    list1 = listmain[:10]
-    list12 = listmain[20:30]
-    list13 = listmain[40:50]
-    list2 = listmain[10:20]
-    list22 = listmain[30:40]
-    list23 = listmain[50:60]
-else:
-    print('Ошибка')
-plt.scatter(list1, list2)
-plt.scatter(list12, list22)
-plt.scatter(list13, list23)
-plt.show()
+import openpyxl as xl
+book = xl.open("data.xlsx")
+sheet = book.active
+list1, list2 = [], []
+run = True
+while run == True:
+    print('Инструкции по вводу данных в таблицу.\n В 1-й строке указываются значения X, \n в следующей строке указываются значения Y')
+    print('Далее для ввода следущих наборов данных необходимо по аналогии вводить в нечетную строку X, а в чётную Y ')
+    print('Укажите номера графиков для вывода через пробел:')
+    choice = input()
+    choice = list(map(int, choice.split(" ")))
+    for i in range (0, sheet.max_column):
+        for j in range(0, (len(choice))):
+            mlier = 2 * choice[j] - 1
+            list1.append(sheet[mlier][i].value)
+            list2.append(sheet[mlier + 1][i].value)
+            plt.scatter(list1, list2)
+    plt.show()
+    print('Для завершения работы нажмите 0')
+    choice = input()
+    if choice == "0":
+        run = False
