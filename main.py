@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import openpyxl as xl
 book = xl.open("data.xlsx")
 sheet = book.active
+color = ["red", "green", "blue", "purple", "gray", "black"]
 list1, list2 = [], []
 run = True
 while run == True:
@@ -11,11 +12,13 @@ while run == True:
     choice = input()
     choice = list(map(int, choice.split(" ")))
     for i in range (0, sheet.max_column):
-        for j in range(0, (len(choice))):
+        for j in range(len(choice)):
             mlier = 2 * choice[j] - 1
-            list1.append(sheet[mlier][i].value)
-            list2.append(sheet[mlier + 1][i].value)
-            plt.scatter(list1, list2)
+            if sheet[mlier][i].value != None:
+                list1.append(sheet[mlier][i].value)
+                list2.append(sheet[mlier + 1][i].value)
+            plt.scatter(list1, list2, c=color[j])
+            list1, list2 = [], []
     plt.show()
     print('Для завершения работы нажмите 0')
     choice = input()
